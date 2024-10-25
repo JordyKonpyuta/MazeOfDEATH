@@ -34,8 +34,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	class UCameraComponent* CameraComponent;
 
-	UPROPERTY(EditAnywhere, Category = "Controller")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Controller")
 	class AMaze_PlayerController* PlayerController;
+
+	UPROPERTY()
+	FTimerHandle InitializationTimer;
+	UPROPERTY()
+	FTimerHandle FearTimer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EFearLevel Fear = EFearLevel::Low;
@@ -45,8 +50,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -56,5 +59,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	void TurnAround(float Ratio);
+
+	UFUNCTION(BlueprintCallable)
+	void InitializePlayer();
+
+	UFUNCTION(BlueprintCallable, Category = "Player")
+	void CheckFearLevel();
 
 };

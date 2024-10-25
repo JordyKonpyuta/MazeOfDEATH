@@ -32,10 +32,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	AMaze_Player* PlayerRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Timer = 30;
+
+	void BeginPlay();
 	UFUNCTION(BlueprintCallable, Category = "PlayerController")
 	void CollectRubies();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "PlayerController")
 	void UpdateUI();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "PlayerController")
+	void GameOver();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "PlayerController")
+	void GameWon();
 	
 };

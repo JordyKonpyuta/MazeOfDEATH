@@ -18,9 +18,10 @@ void AMaze_Monster::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (AMaze_PlayerController* PlayerController = Cast<AMaze_PlayerController>(GetController()))
+	// Get the player controller
+	if (AMaze_PlayerController* MazePlayerController = Cast<AMaze_PlayerController>(GetWorld()->GetFirstPlayerController()))
 	{
-		PlayerController->MonsterRef = this;
+		MazePlayerController->MonsterRef = this;
 	}
 }
 

@@ -5,12 +5,28 @@
 
 #include "Maze_Monster.h"
 #include "Maze_PlayerController.h"
+#include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AMaze_Player::AMaze_Player()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	if (Cast<AMaze_PlayerController>(GetController()))
+	{
+		PlayerController = Cast<AMaze_PlayerController>(GetController());
+		PlayerController->PlayerRef = this;
+		UE_LOG( LogTemp, Warning, TEXT("PlayerController is set") );
+	}
+
+	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
+	CapsuleComponent->SetupAttachment(RootComponent);
+
+	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT ("CameraComponent"));
+	CameraComponent->SetupAttachment(CapsuleComponent);
+	CameraComponent->SetRelativeLocation(FVector(-10, 0, 0));
+	
+	bUseControllerRotationYaw = true;
+	CameraComponent->bUsePawnControlRotation = true;
 
 }
 
@@ -19,34 +35,11 @@ void AMaze_Player::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (Cast<AMaze_PlayerController>(GetController()))
-	{
-		PlayerController = Cast<AMaze_PlayerController>(GetController());
-		PlayerController->PlayerRef = this;
-	}
+	Fear = EFearLevel::Low;
+
+	GetWorld()->GetTimerManager().SetTimer(InitializationTimer, this, &AMaze_Player::InitializePlayer, 2.0f, false);
+	GetWorld()->GetTimerManager().SetTimer( FearTimer, this, &AMaze_Player::CheckFearLevel, 0.5f, true );
 	
-}
-
-// Called every frame
-void AMaze_Player::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	float Distance = FVector::Distance(GetActorLocation(), PlayerController->MonsterRef->GetActorLocation());
-
-	if (Distance < 100)
-	{
-		Fear = EFearLevel::High;
-	}
-	else if (Distance < 200)
-	{
-		Fear = EFearLevel::Medium;
-	}
-	else
-	{
-		Fear = EFearLevel::Low;
-	}
-
 }
 
 // Called to bind functionality to input
@@ -60,7 +53,7 @@ void AMaze_Player::MoveForward(float Value)
 {
 	FHitResult Hit;
 	FVector Start = GetActorLocation();
-	FVector End = Start + GetActorForwardVector() * Value * 100;
+	FVector End = Start + CameraComponent->GetForwardVector() * Value * 3;
 
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
@@ -69,12 +62,46 @@ void AMaze_Player::MoveForward(float Value)
 
 	if (!Hit.bBlockingHit)
 	{
-		SetActorLocation(GetActorLocation() + GetActorForwardVector() * Value * 100);
+		SetActorLocation(GetActorLocation() + CameraComponent->GetForwardVector() * Value * 3, false, nullptr, ETeleportType::ResetPhysics);
 	}
 }
 
 void AMaze_Player::TurnAround(float Ratio)
 {
-	SetActorRotation(GetActorRotation() + FRotator3d(0,0,90*Ratio));
+
+	// Add Local Rotation
+	SetActorRotation(FRotator(0, GetActorRotation().Yaw + (90 * Ratio), 0));
+
+	// SetControlRotation
+	//GetController()->SetControlRotation(FRotator(0, GetController()->GetControlRotation().Yaw + (90 * Ratio), 0));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Control Rotation : " + FString::SanitizeFloat(GetControlRotation().Yaw)));
+}
+
+void AMaze_Player::InitializePlayer()
+{
+}
+
+void AMaze_Player::CheckFearLevel()
+{
+	if(PlayerController->IsValidLowLevel() && PlayerController->MonsterRef->IsValidLowLevel())
+	{
+		float Distance = FVector::Distance(GetActorLocation(), PlayerController->MonsterRef->GetActorLocation());
+		UE_LOG( LogTemp, Warning, TEXT("Distance: %f"), Distance );
+
+		if (Distance < 100)
+		{
+			Fear = EFearLevel::High;
+		}
+		else if (Distance < 200)
+		{
+			Fear = EFearLevel::Medium;
+		}
+		else
+		{
+			Fear = EFearLevel::Low;
+		}
+	}
+
+	else GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("PlayerController or MonsterRef is not valid"));
 }
 

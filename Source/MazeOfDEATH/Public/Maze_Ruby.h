@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Maze_Ruby.generated.h"
 
+class AMaze_Player;
+
 UCLASS()
 class MAZEOFDEATH_API AMaze_Ruby : public AActor
 {
@@ -18,6 +20,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
 	class UBoxComponent* CollisionBox;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsAvailable = false;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -25,5 +30,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY()
+	AMaze_Player* PlayerRef;
+
+	UFUNCTION()
+	void SetIsAvailable();
 
 };

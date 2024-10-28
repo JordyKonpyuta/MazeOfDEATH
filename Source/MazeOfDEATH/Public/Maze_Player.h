@@ -66,4 +66,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Player")
 	void CheckFearLevel();
 
+	UFUNCTION(BlueprintNativeEvent)
+	void UpdateUI();
+
 };

@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "Maze_Monster.generated.h"
 
+class AMaze_Player;
+
 UCLASS()
 class MAZEOFDEATH_API AMaze_Monster : public ACharacter
 {
@@ -25,5 +27,8 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UPROPERTY()
+	AMaze_Player* PlayerRef;
 
 };

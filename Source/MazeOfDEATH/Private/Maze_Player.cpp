@@ -5,6 +5,7 @@
 
 #include "Maze_Monster.h"
 #include "Maze_PlayerController.h"
+#include "Maze_Ruby.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -70,11 +71,10 @@ void AMaze_Player::TurnAround(float Ratio)
 {
 
 	// Add Local Rotation
-	SetActorRotation(FRotator(0, GetActorRotation().Yaw + (90 * Ratio), 0));
+	//SetActorRotation(FRotator(0, GetActorRotation().Yaw + (90 * Ratio), 0));
 
 	// SetControlRotation
-	//GetController()->SetControlRotation(FRotator(0, GetController()->GetControlRotation().Yaw + (90 * Ratio), 0));
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Control Rotation : " + FString::SanitizeFloat(GetControlRotation().Yaw)));
+	GetController()->SetControlRotation(FRotator(0, GetController()->GetControlRotation().Yaw + (90 * Ratio), 0));
 }
 
 void AMaze_Player::InitializePlayer()
@@ -88,20 +88,27 @@ void AMaze_Player::CheckFearLevel()
 		float Distance = FVector::Distance(GetActorLocation(), PlayerController->MonsterRef->GetActorLocation());
 		UE_LOG( LogTemp, Warning, TEXT("Distance: %f"), Distance );
 
-		if (Distance < 100)
+		if (Distance < 900)
 		{
 			Fear = EFearLevel::High;
+			UpdateUI();
 		}
-		else if (Distance < 200)
+		else if (Distance < 1300)
 		{
 			Fear = EFearLevel::Medium;
+			UpdateUI();
 		}
 		else
 		{
 			Fear = EFearLevel::Low;
+			UpdateUI();
 		}
 	}
 
 	else GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("PlayerController or MonsterRef is not valid"));
+}
+
+void AMaze_Player::UpdateUI_Implementation()
+{
 }
 

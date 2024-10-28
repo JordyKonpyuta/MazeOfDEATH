@@ -21,7 +21,11 @@ AMaze_Ruby::AMaze_Ruby()
 void AMaze_Ruby::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	PlayerRef = Cast<AMaze_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+
+	FTimerHandle ActivateHandle;
+	GetWorld()->GetTimerManager().SetTimer(ActivateHandle, this, &AMaze_Ruby::SetIsAvailable, 2.5f, false);
 }
 
 // Called every frame
@@ -29,4 +33,24 @@ void AMaze_Ruby::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (PlayerRef != nullptr && bIsAvailable)
+	{
+		if (FVector::Distance(GetActorLocation(), PlayerRef->GetActorLocation()) <= 100.0f)
+		{
+			PlayerRef->PlayerController->CollectRubies();
+			Destroy();
+		}
+	}
+
+}
+
+void AMaze_Ruby::SetIsAvailable()
+{
+	if (bIsAvailable)
+	{
+		SetActorHiddenInGame(false);
+	}
+
+	else
+		SetActorHiddenInGame(true);
 }

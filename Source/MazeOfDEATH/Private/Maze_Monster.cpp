@@ -3,6 +3,7 @@
 
 #include "Maze_Monster.h"
 
+#include "Maze_Player.h"
 #include "Maze_PlayerController.h"
 
 // Sets default values
@@ -22,6 +23,7 @@ void AMaze_Monster::BeginPlay()
 	if (AMaze_PlayerController* MazePlayerController = Cast<AMaze_PlayerController>(GetWorld()->GetFirstPlayerController()))
 	{
 		MazePlayerController->MonsterRef = this;
+		PlayerRef = Cast<AMaze_Player>(MazePlayerController->GetPawn());
 	}
 }
 
@@ -29,6 +31,14 @@ void AMaze_Monster::BeginPlay()
 void AMaze_Monster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (PlayerRef != nullptr)
+	{
+		if (FVector::Distance(GetActorLocation(), PlayerRef->GetActorLocation()) <= 100.0f)
+		{
+			PlayerRef->PlayerController->GameOver();
+		}
+	}
 
 }
 

@@ -12,6 +12,7 @@
 
 class AMaze_Monster;
 class AMaze_Player;
+class AMaze_Ruby;
 
 UCLASS()
 class MAZEOFDEATH_API AMaze_PlayerController : public APlayerController
@@ -35,7 +36,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float Timer = 30;
 
-	void BeginPlay();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<AMaze_Ruby*> Rubies;
+
+	UFUNCTION(BlueprintCallable)
+	void SelectRubies();
+
+	virtual void BeginPlay() override;
+	
 	UFUNCTION(BlueprintCallable, Category = "PlayerController")
 	void CollectRubies();
 

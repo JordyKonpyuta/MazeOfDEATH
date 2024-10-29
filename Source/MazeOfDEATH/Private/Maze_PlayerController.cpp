@@ -38,6 +38,8 @@ void AMaze_PlayerController::CollectRubies()
 {
 	RubiesCount++;
 	UpdateUI();
+	if (RubiesCount == 10)
+		GameWon();
 }
 
 void AMaze_PlayerController::GameWon_Implementation()

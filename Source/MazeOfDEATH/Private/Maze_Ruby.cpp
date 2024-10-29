@@ -16,8 +16,6 @@ AMaze_Ruby::AMaze_Ruby()
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 
-	static ConstructorHelpers::FObjectFinder<USoundBase> RubySoundObject(TEXT("SoundCue'/Script/Engine.SoundCue'/Game/Assets/Sounds/A_Ruby_Cue.A_Ruby_Cue''"));
-
 }
 
 // Called when the game starts or when spawned
@@ -42,10 +40,10 @@ void AMaze_Ruby::Tick(float DeltaTime)
 
 	if (PlayerRef != nullptr && bIsAvailable)
 	{
-		if (FVector::Distance(GetActorLocation(), PlayerRef->GetActorLocation()) <= 100.0f)
+		if (FVector::Distance(GetActorLocation(), PlayerRef->GetActorLocation()) <= 200.0f)
 		{
 			PlayerRef->PlayerController->CollectRubies();
-			UGameplayStatics::PlaySoundAtLocation(GetWorld(), RubySound, GetActorLocation());
+			PlaySound();
 			Destroy();
 		}
 	}
@@ -61,4 +59,8 @@ void AMaze_Ruby::SetIsAvailable()
 
 	else
 		SetActorHiddenInGame(true);
+}
+
+void AMaze_Ruby::PlaySound_Implementation()
+{
 }

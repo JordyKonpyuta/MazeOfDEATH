@@ -31,4 +31,7 @@ public:
 	UPROPERTY()
 	AMaze_Player* PlayerRef;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bCanMove = false;
+
 };

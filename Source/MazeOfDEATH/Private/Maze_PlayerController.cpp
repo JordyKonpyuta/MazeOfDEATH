@@ -11,8 +11,11 @@ void AMaze_PlayerController::SelectRubies()
 	for (int i = 0; i < 10; i++)
 	{
 		int Count = FMath::RandRange(0, Rubies.Num());
-		Rubies[Count]->bIsAvailable = true;
-		Rubies.RemoveAt(Count);
+		if (Rubies.IsValidIndex(Count) && Rubies[Count] != nullptr)
+		{
+			Rubies[Count]->bIsAvailable = true;
+			Rubies.RemoveAt(Count);
+		}
 	}
 }
 

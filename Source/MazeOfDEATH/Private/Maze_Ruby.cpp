@@ -6,6 +6,7 @@
 #include "Maze_Player.h"
 #include "Maze_PlayerController.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AMaze_Ruby::AMaze_Ruby()
@@ -15,6 +16,8 @@ AMaze_Ruby::AMaze_Ruby()
 
 	CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
 
+	static ConstructorHelpers::FObjectFinder<USoundBase> RubySoundObject(TEXT("SoundCue'/Script/Engine.SoundCue'/Game/Assets/Sounds/A_Ruby_Cue.A_Ruby_Cue''"));
+
 }
 
 // Called when the game starts or when spawned
@@ -22,7 +25,11 @@ void AMaze_Ruby::BeginPlay()
 {
 	Super::BeginPlay();
 
-	PlayerRef = Cast<AMaze_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (Cast<AMaze_Player>(GetWorld()->GetFirstPlayerController()->GetPawn()) != nullptr)
+	{
+		PlayerRef = Cast<AMaze_Player>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	}
+	
 
 	FTimerHandle ActivateHandle;
 	GetWorld()->GetTimerManager().SetTimer(ActivateHandle, this, &AMaze_Ruby::SetIsAvailable, 2.5f, false);
@@ -38,6 +45,7 @@ void AMaze_Ruby::Tick(float DeltaTime)
 		if (FVector::Distance(GetActorLocation(), PlayerRef->GetActorLocation()) <= 100.0f)
 		{
 			PlayerRef->PlayerController->CollectRubies();
+			UGameplayStatics::PlaySoundAtLocation(GetWorld(), RubySound, GetActorLocation());
 			Destroy();
 		}
 	}

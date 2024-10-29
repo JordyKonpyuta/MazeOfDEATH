@@ -54,7 +54,7 @@ void AMaze_Player::MoveForward(float Value)
 {
 	FHitResult Hit;
 	FVector Start = GetActorLocation();
-	FVector End = Start + CameraComponent->GetForwardVector() * Value * 3;
+	FVector End = Start + CameraComponent->GetForwardVector() * Value * 5;
 
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(this);
@@ -63,7 +63,7 @@ void AMaze_Player::MoveForward(float Value)
 
 	if (!Hit.bBlockingHit)
 	{
-		SetActorLocation(GetActorLocation() + CameraComponent->GetForwardVector() * Value * 3, false, nullptr, ETeleportType::ResetPhysics);
+		SetActorLocation(GetActorLocation() + CameraComponent->GetForwardVector() * Value * 5, false, nullptr, ETeleportType::ResetPhysics);
 	}
 }
 

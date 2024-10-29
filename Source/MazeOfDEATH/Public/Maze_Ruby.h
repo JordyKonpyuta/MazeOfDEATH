@@ -27,6 +27,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	USoundBase* RubySound;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

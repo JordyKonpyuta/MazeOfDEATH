@@ -34,9 +34,10 @@ void AMaze_Monster::Tick(float DeltaTime)
 
 	if (PlayerRef != nullptr)
 	{
-		if (FVector::Distance(GetActorLocation(), PlayerRef->GetActorLocation()) <= 100.0f)
+		if (FVector::Distance(GetActorLocation(), PlayerRef->GetActorLocation()) <= 200.0f)
 		{
 			PlayerRef->PlayerController->GameOver();
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Oskour"));
 		}
 	}
 

@@ -93,7 +93,7 @@ void AMaze_Player::CheckFearLevel()
 			Fear = EFearLevel::High;
 			UpdateUI();
 		}
-		else if (Distance < 1300)
+		else if (Distance < 1200)
 		{
 			Fear = EFearLevel::Medium;
 			UpdateUI();

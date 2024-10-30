@@ -8,7 +8,7 @@
 
 void AMaze_PlayerController::SelectRubies()
 {
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		int Count = FMath::RandRange(0, Rubies.Num());
 		if (Rubies.IsValidIndex(Count) && Rubies[Count] != nullptr)

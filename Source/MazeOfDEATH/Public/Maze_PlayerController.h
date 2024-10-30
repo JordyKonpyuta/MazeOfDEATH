@@ -22,7 +22,7 @@ class MAZEOFDEATH_API AMaze_PlayerController : public APlayerController
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int RubiesCount = 9;
+	int RubiesCount = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int NumberOfRubiesToCollect;
